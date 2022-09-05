@@ -14,6 +14,7 @@
         }
     },
     "scripts": {
+        "start": "node server.js",
         "start:dev": "nodemon server.js",
         "start:prod": "SET NODE_ENV=production&&nodemon server.js",
         "debug": "ndb server.js",
@@ -59,5 +60,8 @@
         "parcel": "^2.7.0",
         "prettier": "^2.7.1",
         "process": "^0.11.10"
+    },
+    "engines": {
+        "node": "16.x"
     }
 }
