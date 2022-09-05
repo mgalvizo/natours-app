@@ -1,0 +1,63 @@
+{
+    "name": "natours",
+    "version": "1.0.0",
+    "description": "Learning node, express and mongoDB",
+    "main": "app.js",
+    "front-end": "bundle.js",
+    "targets": {
+        "main": false,
+        "front-end": {
+            "context": "browser",
+            "source": "./public/js/index.js",
+            "sourceMap": false,
+            "distDir": "./public/js/"
+        }
+    },
+    "scripts": {
+        "start:dev": "nodemon server.js",
+        "start:prod": "SET NODE_ENV=production&&nodemon server.js",
+        "debug": "ndb server.js",
+        "watch:js": "parcel watch",
+        "build:js": "parcel build"
+    },
+    "author": "Miguel Garcia",
+    "license": "ISC",
+    "dependencies": {
+        "axios": "^0.27.2",
+        "bcryptjs": "^2.4.3",
+        "compression": "^1.7.4",
+        "cookie-parser": "^1.4.6",
+        "dotenv": "^16.0.1",
+        "express": "^4.18.1",
+        "express-mongo-sanitize": "^2.2.0",
+        "express-rate-limit": "^6.5.1",
+        "helmet": "^5.1.1",
+        "hpp": "^0.2.3",
+        "html-to-text": "^8.2.1",
+        "jsonwebtoken": "^8.5.1",
+        "mapbox-gl": "^2.10.0",
+        "mongoose": "^6.5.1",
+        "morgan": "^1.10.0",
+        "multer": "^1.4.5-lts.1",
+        "nodemailer": "^6.7.8",
+        "pug": "^3.0.2",
+        "sharp": "^0.30.7",
+        "slugify": "^1.6.5",
+        "stripe": "^10.7.0",
+        "validator": "^13.7.0",
+        "xss-clean": "^0.1.1"
+    },
+    "devDependencies": {
+        "eslint": "^8.21.0",
+        "eslint-config-airbnb": "^19.0.4",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-jsx-a11y": "^6.6.1",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "eslint-plugin-react": "^7.30.1",
+        "parcel": "^2.7.0",
+        "prettier": "^2.7.1",
+        "process": "^0.11.10"
+    }
+}

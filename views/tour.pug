@@ -1,0 +1,99 @@
+extends base
+//- Include mixin that is in another file
+include _reviewCard
+//- Append head with necessary tour page scripts
+block append head
+    link(href='https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css' rel='stylesheet')
+    script(src='https://js.stripe.com/v3/' defer)
+
+//- Mixin that fills the overview box with its label, the literal text and the icon
+mixin overviewBoxFacts(label, text, icon)
+    .overview-box__detail
+        svg.overview-box__icon
+            use(xlink:href=`/img/icons.svg#icon-${icon}`)
+        span.overview-box__label= label
+        span.overview-box__text= text
+//- Mixin that fills the overview box with the tour guide info
+mixin overviewBoxGuides(guide)
+    .overview-box__detail
+        img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.name}`)
+        span.overview-box__label= guide.role
+        span.overview-box__text= guide.name
+
+block content
+    section.section-header
+        .header__hero
+            .header__hero-overlay &nbsp;
+            img.header__hero-img(src=`/img/tours/${tour.imageCover}`, alt=`${tour.name}`)
+
+        .heading-box
+            h1.heading-primary
+                span= `${tour.name} tour`
+            .heading-box__group
+                .heading-box__detail
+                    svg.heading-box__icon
+                        use(xlink:href='/img/icons.svg#icon-clock')
+                    span.heading-box__text= `${tour.duration} days`
+                .heading-box__detail
+                    svg.heading-box__icon
+                        use(xlink:href='/img/icons.svg#icon-map-pin')
+                    span.heading-box__text= tour.startLocation.description
+
+    section.section-description
+        .overview-box
+            div
+                .overview-box__group
+                    h2.heading-secondary.ma-bt-lg Quick facts
+                    //- Unbuffered code
+                    - const date = tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
+                    //- Use the mixin
+                    +overviewBoxFacts('Next Date', date, 'calendar')
+                    +overviewBoxFacts('Difficulty', tour.difficulty, 'trending-up')
+                    +overviewBoxFacts('Participants', `${tour.maxGroupSize}`, 'user')
+                    +overviewBoxFacts('Rating', `${tour.ratingsAverage} / 5`, 'star')
+                .overview-box__group
+                    h2.heading-secondary.ma-bt-lg Your tour guides
+                    //- Loop the tour guides array
+                    each guide in tour.guides
+                        - if (guide.role === 'lead-guide') guide.role = 'lead guide'
+                        - if (guide.role === 'guide') guide.role = 'tour guide'
+                        +overviewBoxGuides(guide)
+
+        .description-box
+            h2.heading-secondary.ma-bt-lg= `About ${tour.name} tour`
+            //- Splits the description by the \n to get different paragraphs
+            - const paragraphs = tour.description.split('\n')
+            each paragraph in paragraphs
+                p.description__text= paragraph
+
+    section.section-pictures
+        //- The second argument in a loop is a zero based index
+        each image, i in tour.images
+            .picture-box
+                img.picture-box__img(src=`/img/tours/${image}`, alt=`The Park Camper Tour ${i + 1}`, class=`picture-box__img--${i + 1}`)
+
+    section.section-map
+        //- Expose locations data in the HTML and convert it to a string
+        #map(data-locations=`${JSON.stringify(tour.locations)}`)
+
+    section.section-reviews
+        .reviews
+            each review in tour.reviews
+                +reviewCard(review)
+
+    section.section-cta
+        .cta
+            .cta__img.cta__img--logo
+                img(src='/img/logo-white.png', alt='Natours logo')
+                //- While loop
+            - let i = 0
+            while i < 2
+                img.cta__img(class=`cta__img--${i + 1}` src=`/img/tours/${tour.images[i]}`, alt=`Tour image ${i + 1}`)
+                - i++
+            .cta__content
+                h2.heading-secondary What are you waiting for?
+                p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
+                if user
+                    button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
+                else
+                    a.btn.btn--green.span-all-rows(href='/login') Log in to book a tour

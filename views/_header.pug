@@ -1,0 +1,18 @@
+//- class name
+header.header
+    nav.nav.nav--tours
+        a.nav__el(href='/') All tours
+    //- We don't need to specify "div" since it is the standard block in HTML
+    .header__logo
+        img(src='/img/logo-white.png' alt='Natours logo')
+    nav.nav.nav--user
+        //- Conditionally render content in the template
+        if user
+            //- This part is only available when someone logs in
+            a.nav__el.nav__el--logout Log out
+            a.nav__el(href='/currentUser')
+                img.nav__user-img(src=`/img/users/${user.photo}` alt=`Photo of ${user.name}`)
+                span= user.name.split(' ')[0]
+        else
+            a.nav__el(href='/login') Log in
+            button.nav__el.nav__el--cta Sign up
