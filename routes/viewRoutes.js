@@ -8,7 +8,7 @@ const router = express.Router();
 // Set the overview as the home page
 router.get(
     '/',
-    bookingController.createBookingCheckout,
+    // bookingController.createBookingCheckout,
     authController.isLoggedIn,
     viewController.getOverview
 );

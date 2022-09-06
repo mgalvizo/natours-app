@@ -1,6 +1,7 @@
 // Require stripe
 const Stripe = require('stripe');
 const Tour = require('../models/tourModel');
+const User = require('../models/userModel');
 const Booking = require('../models/bookingModel');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('../controllers/handlerFactory');
@@ -22,9 +23,10 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
         // The URL to which Stripe should send customers when payment or setup is complete.
         // The query string is not a secure method because anyone that knows the url structure
         // can access the url without paying (This is a temporary workaround)
-        success_url: `${req.protocol}://${req.get('host')}/?tour=${
-            req.params.tourID
-        }&user=${req.user.id}&price=${tour.price}`,
+        // success_url: `${req.protocol}://${req.get('host')}/currentUserTours/?tour=${
+        //     req.params.tourID
+        // }&user=${req.user.id}&price=${tour.price}`,
+        success_url: `${req.protocol}://${req.get('host')}/currentUserTours`,
         // The URL the customer will be directed to if they decide to cancel payment and return to your website.
         cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
         // We have access to the user's email because this is after the protect middleware
@@ -42,7 +44,9 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
                         description: tour.summary,
                         // live images hosted in the internet
                         images: [
-                            `https://www.natours.dev/img/tours/${tour.imageCover}`,
+                            `${req.protocol}://${req.get('host')}/img/tours/${
+                                tour.imageCover
+                            }`,
                         ],
                     },
                     // Price in cents
@@ -60,21 +64,67 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.createBookingCheckout = catchAsync(async (req, res, next) => {
-    // Get the data from the query string
-    const { tour, user, price } = req.query;
+// exports.createBookingCheckout = catchAsync(async (req, res, next) => {
+//     // Get the data from the query string
+//     const { tour, user, price } = req.query;
 
-    if (!tour && !user && !price) {
-        return next();
-    }
+//     if (!tour && !user && !price) {
+//         return next();
+//     }
+
+//     await Booking.create({ tour, user, price });
+
+//     // Remove the query string from the success url and redirec to "/"
+//     // Creates a request to the "/" route, since we are hitting that route
+//     // for a second time tour, user and price won't be defined so the next middleware will run
+//     // which is loading the overview page
+//     res.redirect(req.originalUrl.split('?')[0]);
+// });
+
+const createBookingCheckout = catchAsync(async session => {
+    // Get the tour id
+    const tour = session.client_reference_id;
+    // Get the user id
+    const user = (await User.findOne({ email: session.customer_email })).id;
+    // Price in dollars
+    price = session.line_items[0].price_data.unit_amount / 100;
 
     await Booking.create({ tour, user, price });
+});
 
-    // Remove the query string from the success url and redirec to "/"
-    // Creates a request to the "/" route, since we are hitting that route
-    // for a second time tour, user and price won't be defined so the next middleware will run
-    // which is loading the overview page
-    res.redirect(req.originalUrl.split('?')[0]);
+exports.webhookCheckout = catchAsync(async (req, res, next) => {
+    // Read the signature from the headers
+    const signature = request.headers['stripe-signature'];
+
+    let event;
+
+    try {
+        event = stripe.webhooks.constructEvent(
+            req.body,
+            signature,
+            process.env.STRIPE_ENDPOINT_SECRET
+        );
+    } catch (error) {
+        res.status(400).send(`Webhook Error: ${error.message}`);
+        return;
+    }
+
+    // Handle the event
+    switch (event.type) {
+        case 'checkout.session.completed':
+            const session = event.data.object;
+            // Then define and call a function to handle the event checkout.session.completed
+            createBookingCheckout(session);
+            break;
+        // ... handle other event types
+        default:
+            console.log(`Unhandled event type ${event.type}`);
+    }
+
+    // Return a 200 response to acknowledge receipt of the event
+    res.status(200).json({
+        received: true,
+    });
 });
 
 exports.createBooking = factory.createOne(Booking);

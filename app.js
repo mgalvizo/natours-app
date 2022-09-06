@@ -110,6 +110,7 @@ const limiter = rateLimit({
 // Apply the limiter only to the endpoint
 app.use('/api', limiter);
 
+// Body parser
 // Use middleware to add the data from the body to the request object and limit the size to 10kb
 // Reading the data from the body into req.body
 app.use(express.json({ limit: '10kb' }));
