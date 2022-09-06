@@ -74,6 +74,7 @@ app.use(
                 'https://cdn.jsdelivr.net',
                 `http://${host}:${nodemonPort}/`,
                 'ws://127.0.0.1:*/',
+                'https://enigmatic-bayou-81118.herokuapp.com/',
             ],
         },
     })
