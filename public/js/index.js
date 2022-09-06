@@ -103,6 +103,6 @@ if (bookTourButton) {
     });
 }
 
-if (alert) {
+if (alertMessage) {
     showAlert('success', alertMessage, 20);
 }
