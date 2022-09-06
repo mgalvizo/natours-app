@@ -31,7 +31,8 @@ const port = process.env.PORT || 3000;
 
 // Start a server
 const server = app.listen(port, () => {
-    console.log(`App running on http://${host}:${port}/`);
+    // console.log(`App running on http://${host}:${port}/`);
+    console.log(`App running on port ${port}`);
 });
 
 process.on('unhandledRejection', error => {
