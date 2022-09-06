@@ -33,6 +33,9 @@ const bookingRouter = require('./routes/bookingRoutes');
 // Run express and save it in app
 const app = express();
 
+// Enable trust-proxy
+app.enable('trust-proxy');
+
 // Set the template view engine
 app.set('view engine', 'pug');
 // Define the path of the view templates

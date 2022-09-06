@@ -3,14 +3,21 @@
     "version": "1.0.0",
     "description": "Learning node, express and mongoDB",
     "main": "app.js",
-    "front-end": "bundle.js",
+    "backend": "bundle.js",
+    "frontend": "bundle.min.css",
     "targets": {
         "main": false,
-        "front-end": {
+        "backend": {
             "context": "browser",
             "source": "./public/js/index.js",
             "sourceMap": false,
             "distDir": "./public/js/"
+        },
+        "frontend": {
+            "context": "browser",
+            "source": "./public/css/style.css",
+            "sourceMap": false,
+            "distDir": "./public/css/"
         }
     },
     "scripts": {
@@ -18,8 +25,8 @@
         "start:dev": "nodemon server.js",
         "start:prod": "SET NODE_ENV=production&&nodemon server.js",
         "debug": "ndb server.js",
-        "watch:js": "parcel watch",
-        "build:js": "parcel build"
+        "watch": "parcel watch",
+        "build": "parcel build"
     },
     "author": "Miguel Garcia",
     "license": "ISC",
