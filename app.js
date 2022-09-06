@@ -18,6 +18,8 @@ const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 // Require compression
 const compression = require('compression');
+// Require cors
+const cors = require('cors');
 
 // Importing AppError class
 const AppError = require('./utils/appError');
@@ -44,6 +46,14 @@ app.set('views', path.join(__dirname, 'views'));
 /*
 // GLOBAL MIDDLEWARE
 */
+
+// Implement CORS
+// Sets the Allow-Control-Allow-Origin header to * (everything)
+app.use(cors());
+
+// OPTIONS is another http method that we can respond to.
+// Enable pre-flight to handle DELETE, PUT and PATCH methods.
+app.options('*', cors());
 
 // Use built-in middleware to serve static files
 // app.use(express.static(`${__dirname}/public`));
