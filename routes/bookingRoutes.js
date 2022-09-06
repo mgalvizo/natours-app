@@ -22,12 +22,4 @@ router
     .patch(bookingController.updateBooking)
     .delete(bookingController.deleteBooking);
 
-// Adding the stripe route with the express.raw() middleware
-router
-    .route('/webhook-checkout')
-    .post(
-        express.raw({ type: 'application/json' }),
-        bookingController.webhookCheckout
-    );
-
 module.exports = router;

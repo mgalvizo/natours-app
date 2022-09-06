@@ -31,6 +31,8 @@ const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
+// Import Booking controller for stripe checkout function
+const bookingController = require('./controllers/bookingController');
 
 // Run express and save it in app
 const app = express();
@@ -109,6 +111,13 @@ const limiter = rateLimit({
 
 // Apply the limiter only to the endpoint
 app.use('/api', limiter);
+
+// Adding the stripe route before body parser because we need the body as raw, NOT as json.
+app.post(
+    '/webhook-checkout',
+    express.raw({ type: 'application/json' }),
+    bookingController.webhookCheckout
+);
 
 // Body parser
 // Use middleware to add the data from the body to the request object and limit the size to 10kb
