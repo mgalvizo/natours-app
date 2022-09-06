@@ -26,7 +26,9 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
         // success_url: `${req.protocol}://${req.get('host')}/currentUserTours/?tour=${
         //     req.params.tourID
         // }&user=${req.user.id}&price=${tour.price}`,
-        success_url: `${req.protocol}://${req.get('host')}/currentUserTours`,
+        success_url: `${req.protocol}://${req.get(
+            'host'
+        )}/currentUserTours?alert=booking`,
         // The URL the customer will be directed to if they decide to cancel payment and return to your website.
         cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
         // We have access to the user's email because this is after the protect middleware

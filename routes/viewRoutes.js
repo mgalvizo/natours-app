@@ -5,6 +5,9 @@ const bookingController = require('../controllers/bookingController');
 
 const router = express.Router();
 
+// Middleware that will run for all requests
+router.use(viewController.alerts);
+
 // Set the overview as the home page
 router.get(
     '/',

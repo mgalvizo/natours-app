@@ -4,6 +4,18 @@ const Booking = require('../models/bookingModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
+exports.alerts = (req, res, next) => {
+    const { alert } = req.query;
+
+    if (alert === 'booking') {
+        // Sometimes the stripe webhook is called a little bit after the success URL is called
+        // causing the booking not to show up right away, that's the reason for this alert
+        res.locals.alert = `Your booking was successful! Please check your email for a confirmation. If your booking doesn't show up immediately, please come back later.`;
+    }
+
+    next();
+};
+
 exports.getOverview = catchAsync(async (req, res, next) => {
     // Get tour data from collection
     const tours = await Tour.find();

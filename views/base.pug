@@ -11,7 +11,8 @@ html
             link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato:300,300i,700')
             link(rel='shortcut icon' type='image/png' href='/img/favicon.png')
             script(src='/js/bundle.js' defer)
-    body
+    //- only set the alert if the alert variable is available
+    body(data-alert=`${alert ? alert : ''}`)
         //- Buffered comment
         // HEADER
         //- Include header file
