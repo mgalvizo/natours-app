@@ -14,7 +14,7 @@ class Email {
         this.from = `Miguel Garcia <${
             process.env.NODE_ENV === 'production'
                 ? process.env.SENDGRID_EMAIL_FROM
-                : this.from
+                : process.env.EMAIL_FROM
         }>`;
     }
 
@@ -58,10 +58,7 @@ class Email {
         );
         // Define the email options
         const mailOptions = {
-            from:
-                process.env.NODE_ENV === 'production'
-                    ? process.env.SENDGRID_EMAIL_FROM
-                    : this.from,
+            from: this.from,
             // Options object parameter properties
             to: this.to,
             subject,
