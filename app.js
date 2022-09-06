@@ -37,7 +37,7 @@ const bookingController = require('./controllers/bookingController');
 // Run express and save it in app
 const app = express();
 
-// Enable trust-proxy
+// Enable trust proxy
 app.enable('trust proxy');
 
 // Set the template view engine
