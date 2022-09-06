@@ -92,7 +92,7 @@ const createBookingCheckout = catchAsync(async session => {
     await Booking.create({ tour, user, price });
 });
 
-exports.webhookCheckout = catchAsync(async (req, res, next) => {
+exports.webhookCheckout = (req, res) => {
     // Read the signature from the headers
     const signature = request.headers['stripe-signature'];
 
@@ -105,8 +105,7 @@ exports.webhookCheckout = catchAsync(async (req, res, next) => {
             process.env.STRIPE_ENDPOINT_SECRET
         );
     } catch (error) {
-        res.status(400).send(`Webhook Error: ${error.message}`);
-        return;
+        return res.status(400).send(`Webhook Error: ${error.message}`);
     }
 
     // Handle the event
@@ -125,7 +124,7 @@ exports.webhookCheckout = catchAsync(async (req, res, next) => {
     res.status(200).json({
         received: true,
     });
-});
+};
 
 exports.createBooking = factory.createOne(Booking);
 
